@@ -10,12 +10,8 @@ import torchvision
 
 import torch
 import random
-# from torch.utils.data import Dataset
-# from attackers.ubd import UBDDefense
 from attackers.basl import BASL
-# from attackers.icdm import ICDM
 
-# from utils.models import *
 
 
 torch.autograd.set_detect_anomaly(True)

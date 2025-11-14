@@ -13,7 +13,6 @@ from torch.utils.data import Dataset
 # from basl.ubd import UBDDefense
 from attackers.basl import BASL
 from deb import DEB
-# from attackers.icdm import ICDM
 
 torch.autograd.set_detect_anomaly(True)
 
@@ -190,13 +189,13 @@ def main():
         temp_dataset = TempDataset(full_dataset=data_test, transform=datasets.transforms_test_augment[args.dataset])
         dataloader_test = DataLoader(temp_dataset, batch_size=64, shuffle=True)
 
-    model_name = f'results_deb/attacked_models/entire_model_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}.pth'
+    model_name = f'attacked_models/entire_model_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}.pth'
     
-    trigger_name = f'results_deb/attacked_models/entire_model_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_trigger.pth'
+    trigger_name = f'attacked_models/entire_model_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_trigger.pth'
     
-    top_tunned_name = f'results_deb/results_deb/tunned_top_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_tau={args.tau}_lambda_w={args.lambda_w}.pth'
+    top_tunned_name = f'results_deb/tunned_top_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_tau={args.tau}_lambda_w={args.lambda_w}.pth'
     
-    tunned_results_log=open(f'results_deb/results_deb/results_tunned_top_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_tau={args.tau}_lambda_w={args.lambda_w}.txt','w')
+    tunned_results_log=open(f'results_deb/results_tunned_top_dataset={args.dataset}_epochs={args.epochs}_attack_epoch={args.attack_epoch}_batch_size={args.batch_size}_trigger={args.trigger}_attack_id={args.attack_id}_num_passive={args.num_passive}_target_label={args.target_label}_tau={args.tau}_lambda_w={args.lambda_w}.txt','w')
     
     entire_model = torch.load(model_name, weights_only=False)
     entire_model = entire_model.to(device)
@@ -213,7 +212,7 @@ def main():
 
     deft = DEB(args, entire_model, dataloader_train, dataloader_test, device, trigger=trigger,auxiliary_index=basl.auxiliary_index, threshold=args.tau)
 
-    top_tuned, metrics = deft.evaluate_deft_defense(lr=0.001, fine_tune_epochs=100, top_tunned_name=top_tunned_name)
+    top_tuned, metrics = deft.evaluate_defense(lr=0.001, fine_tune_epochs=100, top_tunned_name=top_tunned_name)
 
     acc_a = deft.test()
     asr_a = deft.backdoor(top_tuned=top_tuned)

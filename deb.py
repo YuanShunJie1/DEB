@@ -108,7 +108,7 @@ def draw_embedding_distribution_super(args, all_embeddings, y_pred_ent, y_pred_d
     
     
 
-class DEFT(object):
+class DEB(object):
     def __init__(self, args, model, train_loader, test_loader, device, trigger, auxiliary_index, threshold):
         self.args = args
         self.model = model
@@ -368,18 +368,6 @@ class DEFT(object):
         for i in range(num_parties):
             all_embeddings.append(torch.cat([embeddings_benign_detected[i], embeddings_malicious_detected[i]], dim=0))
         
-        
-        # out_pred_dis = []
-        # temp = y_pred_malicious.tolist()
-        # for idx in range(len(temp)):
-        #     if temp[idx] == 1:
-        #         out_pred_dis[indices_malicious[idx].item()] = 1
-        
-        # all_indices = torch.cat([indices_benign, indices_malicious])
-        # all_preds = torch.cat([y_pred_benign, y_pred_malicious])
-        # sorted_indices, sort_order = torch.sort(all_indices)
-        # out_pred = all_preds[sort_order]
-
         y_pred = torch.cat([y_pred_benign, y_pred_malicious])
         all_indices = torch.cat([indices_benign, indices_malicious])
         sorted_indices, sort_order = torch.sort(all_indices)
@@ -467,33 +455,16 @@ class DEFT(object):
         return self.model.active
 
 
-    def evaluate_deft_defense(self, lr=0.001, fine_tune_epochs=30, top_tunned_name='tunned_top.pth'):
-        # if os.path.exists(top_tunned_name):
-        #     print(f"{top_tunned_name} existed, skiping finetuning.")
-        #     return torch.load(top_tunned_name, map_location=self.device, weights_only=False), None
-
+    def evaluate_defense(self, lr=0.001, fine_tune_epochs=30, top_tunned_name='tunned_top.pth'):
         print("\n============== DEFT Defense Evaluation ==============")
         class_embeddings = self.obtain_active_embeddings()
         
         embs_b1, embs_m1, labs_b1, labs_m1, inds_b1, inds_m1, m1, image_material1 = self.entropy_based_detection(class_embeddings)
-        
         embs_b2, embs_m2, labs_b2, labs_m2, m2, out_pred_dis = self.distance_based_detection(embs_b1, embs_m1, labs_b1, labs_m1, inds_b1, inds_m1)
 
-        
-        all_embeddings, y_pred_np_ent, y_true_np_ent = image_material1
-        # _, y_pred_np_dis, y_true_np_dis = image_material2
-        
+        top_tuned = self.finetune_top_model(embs_b2, embs_m2, labs_b2, labs_m2, lr=lr, fine_tune_epochs=fine_tune_epochs)
 
-        draw_embedding_distribution_super(None, all_embeddings, y_pred_np_ent, out_pred_dis, y_true_np_ent, fig_file=f'/home/shunjie/codes/DEFT/basl/results_images/embedding_distribution_all_dataset={self.args.dataset}_tau={self.args.tau}.pdf')
-        
-        os._exit(0)
-        # top_tuned = self.finetune_top_model(embs_b2, embs_m2, labs_b2, labs_m2, lr=lr, fine_tune_epochs=fine_tune_epochs)
-        
-        # ablation studies
-        # embs_b2, embs_m2, labs_b2, labs_m2, m2 = self.distance_based_detection(embs_b1, embs_m1, labs_b1, labs_m1, inds_b1, inds_m1)
-        # top_tuned = self.finetune_top_model(embs_b1, embs_m1, labs_b1, labs_m1, lr=lr, fine_tune_epochs=fine_tune_epochs)
-        
-        metrics = [m1, m1]
+        metrics = [m1, m2]
         
         # 保存 finetuned 模型
         torch.save(top_tuned, top_tunned_name)
