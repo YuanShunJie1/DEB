@@ -9,19 +9,18 @@ DEB is a defense framework designed to **detect** and **eliminate** backdoors in
 - The DEB defense method
 
 
-## 📁 Dataset Preparation
-Please download the required datasets into the directory: datasets
-
 ## 🚀 Usage
-You need to run **two main steps**:
+You need to run **three main steps**:
 
-### 1. Run the Backdoor Attack (BASL)
+### 1. Download the required datasets into the directory: datasets
+
+### 2. Run the Backdoor Attack (BASL)
 This simulates the malicious participant embedding a backdoor:
 ```bash
 python basl.py --dataset cifar10 --epochs 100 --attack_epoch 90 --target_label 0
 ```
 
-### 2. Run DEB Defense on the Last Epoch
+### 3. Run DEB Defense on the Last Epoch
 After the backdoor model is trained, run DEB to detect and remove backdoors:
 ```bash
 python test_deb.py --dataset cifar10 --epochs 100 --attack_epoch 80 --target_label 0 --tau 0.2 --lambda_w 0.5
