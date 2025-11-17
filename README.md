@@ -1,8 +1,8 @@
-# DEB: Detecting and Eliminating Backdoors in Split Neural Network-Based Vertical Federated Learning
+# DEB: A Two-Stage Backdoor Defense for Split Neural Network-Based Vertical Federated Learning
 
 This repository contains the official implementation of the paper:
 
-**Detecting and Eliminating Backdoors in Split Neural Network-Based Vertical Federated Learning (DEB)**
+**DEB: A Two-Stage Backdoor Defense for Split Neural Network-Based Vertical Federated Learning**
 
 DEB is a defense framework designed to **detect** and **eliminate** backdoors in Split Neural Network-based Vertical Federated Learning (VFL). This codebase includes:
 - Backdoor attack implementation (BASL)
