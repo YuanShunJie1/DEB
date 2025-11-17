@@ -25,7 +25,7 @@ After the backdoor model is trained, run DEB to detect and remove backdoors:
 ```bash
 python test_deb.py --dataset cifar10 --epochs 100 --attack_epoch 80 --target_label 0 --tau 0.2 --lambda_w 0.5
 ```
-tau and lambda_w are two hyperparameters corresponding to τ and λ in the paper.
+Note that tau and lambda_w are two hyperparameters corresponding to τ and λ in the paper.
 
 ## 🙏 Acknowledgements
 We would like to thank the following works for their inspiration and contribution to this project:
