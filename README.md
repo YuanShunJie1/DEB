@@ -38,4 +38,4 @@ We would like to thank the following works for their inspiration and contributio
    *A practical clean-label backdoor attack with limited information in vertical federated learning*,  
    in Proceedings of the IEEE International Conference on Data Mining (ICDM 2023).
 
-
+This repository partially builds upon the open-source projects: https://github.com/WWlnZSBMaXU/Triggerless, https://github.com/13thDayOfLunarMay/TECB-attack, https://github.com/Mr-Ace-1997/Backdoor-Attack-Against-Split-Neural-Network-Based-Vertical-Federated-Learning. We sincerely thank the original authors for making their code publicly available.
